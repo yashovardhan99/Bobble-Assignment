@@ -38,4 +38,33 @@ for(item in list) {
 Here, the list is being modified while we are iterating over it. This results in the above-mentioned error being thrown. The above code can also be used to reproduce this error.
 
 #### How to fix it
+A simple fix for the above problem is to use an iterator instead of manually iterating over the list.
+So the above code becomes:-
+```kotlin
+val list = ArrayList<Int>()
+list.addAll(....)
+val iterator = list.iterator()
+while(iterator.hasNext()) {
+  val item = iterator.next()
+  if(item >= 2 && item <= 6)
+    iterator.remove()
+}
+```
+The above code does exactly the same thing - Remove all numbers between 2 and 6 (both inclusive) from the ArrayList.
+However, the main difference being `iterator#remove()` calls are safe.
 
+Another possible alternative is to add all the elements you intend to remove in a separate list and use `ArrayList#removeAll()`.
+
+#### Side note on Multi-threaded situations
+In case the above was not the use-case and the arrayList was being used by multiple threads, it can also result in the mentioned error.
+
+In such a case, there are 2 possible solutions:-
+- Use Vector instead of ArrayList. ArrayList is not synchronized while Vector is.
+- Lock any list modifications in a synchronized block. This prevents multiple threads from accessing it at the same time.
+
+## About me
+I am an android developer and a kotlin enthusiast. I am currently trying out new tools and improving my knowledge of tools available on android. You can find some of my common profiles below:-
+- [GitHub](https://github.com/yashovardhan99)
+- [LinkedIn](https://www.linkedin.com/in/yashovardhan99/)
+- [Medium](https://medium.com/@yashovardhan99)
+- [Twitter](https://twitter.com/yashovardhan99)
