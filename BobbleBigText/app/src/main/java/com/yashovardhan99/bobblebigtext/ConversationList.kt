@@ -30,7 +30,7 @@ fun ConversationList(list: List<Message>, modifier: Modifier = Modifier) {
 fun ListPreview(@PreviewParameter(BooleanPreviewProvider::class) isDark: Boolean) {
     val list = mutableListOf<Message>()
     for (i in 1..5)
-        list.add(Message(text = "Hello how are you, $i", size = i * 2f))
+        list.add(Message(text = "Hello how are you, $i", size = i * 12f))
     BobbleBigTextTheme(isDark) {
         Surface(Modifier.fillMaxSize()) {
             ConversationList(list)
