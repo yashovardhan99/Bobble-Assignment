@@ -63,7 +63,7 @@ fun MainPage(modifier: Modifier = Modifier, list: List<Message>, insertMessage: 
                 bottom.linkTo(sendBar.top)
                 width = Dimension.fillToConstraints
                 height = Dimension.preferredWrapContent
-            }.gravity(Alignment.Bottom)
+            }.fillMaxSize()
         )
         SendBar(modifier = Modifier.constrainAs(sendBar) {
             bottom.linkTo(parent.bottom)
