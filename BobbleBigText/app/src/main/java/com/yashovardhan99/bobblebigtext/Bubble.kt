@@ -31,7 +31,7 @@ fun Bubble(message: Message) {
     ) {
         Text(
             text = message.text, fontSize = message.size,
-            textAlign = TextAlign.End,
+            textAlign = TextAlign.Start,
             modifier = Modifier.padding(8.dp)
                 .preferredWidthIn(10.dp, 300.dp)
         )
