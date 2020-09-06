@@ -2,7 +2,6 @@ package com.yashovardhan99.bobblebigtext
 
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.ColumnScope.gravity
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -30,7 +29,7 @@ fun Bubble(message: Message) {
             .padding(8.dp)
     ) {
         Text(
-            text = message.text, fontSize = message.size,
+            text = message.text, fontSize = message.size.sp,
             textAlign = TextAlign.Start,
             modifier = Modifier.padding(8.dp)
                 .preferredWidthIn(10.dp, 300.dp)
@@ -41,7 +40,7 @@ fun Bubble(message: Message) {
 @Preview(showDecoration = true)
 @Composable
 fun BubblePreview(@PreviewParameter(BooleanPreviewProvider::class) isDark: Boolean) {
-    val message = Message("Hello, How are you", 10.sp)
+    val message = Message(text = "Hello, How are you", size = 10f)
     BobbleBigTextTheme(isDark) {
         Surface(Modifier.fillMaxSize()) {
             Bubble(message = message)

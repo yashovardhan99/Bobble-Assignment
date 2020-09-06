@@ -11,6 +11,6 @@ class BooleanPreviewProvider : PreviewParameterProvider<Boolean> {
 fun getFakeMessages(): List<Message> {
     val list = mutableListOf<Message>()
     for (i in 1..20)
-        list.add(Message("Hello how are you, $i", (i * 2).sp))
+        list.add(Message(text = "Hello how are you, $i", size = (i * 2f)))
     return list
 }

@@ -105,7 +105,7 @@ fun SendBar(modifier: Modifier = Modifier, postMessage: (Message) -> Unit) {
             )
             SendButton(onClick = {
                 if (textFieldValue.text.isNotBlank()) {
-                    postMessage(Message(textFieldValue.text, size.value.sp))
+                    postMessage(Message(text = textFieldValue.text, size = size.value))
                     textFieldValue = TextFieldValue("")
                     size.stop()
                     size.animateTo(12f)
@@ -115,7 +115,7 @@ fun SendBar(modifier: Modifier = Modifier, postMessage: (Message) -> Unit) {
                     size.animateTo(size.max, FloatTweenSpec(duration = 2000, easing = LinearEasing))
             }, onLongEnd = {
                 if (textFieldValue.text.isNotBlank()) {
-                    postMessage(Message(textFieldValue.text, size.value.sp))
+                    postMessage(Message(text = textFieldValue.text, size = size.value))
                     textFieldValue = TextFieldValue("")
                     size.stop()
                     size.animateTo(12f)

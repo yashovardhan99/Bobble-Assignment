@@ -56,13 +56,15 @@ fun MainPage(modifier: Modifier = Modifier, list: List<Message>, insertMessage: 
     ConstraintLayout(modifier.fillMaxSize().gravity(Alignment.Bottom)) {
         val convList = createRef()
         val sendBar = createRef()
-        ConversationList(list = list,
+        ConversationList(
+            list = list,
             modifier = Modifier.constrainAs(convList) {
                 top.linkTo(parent.top)
                 bottom.linkTo(sendBar.top)
                 width = Dimension.fillToConstraints
-                height = Dimension.fillToConstraints
-            })
+                height = Dimension.preferredWrapContent
+            }.gravity(Alignment.Bottom)
+        )
         SendBar(modifier = Modifier.constrainAs(sendBar) {
             bottom.linkTo(parent.bottom)
             width = Dimension.fillToConstraints
