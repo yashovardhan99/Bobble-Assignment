@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.ColumnScope.gravity
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.primarySurface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -81,7 +82,9 @@ fun SendBar(modifier: Modifier = Modifier, postMessage: (Message) -> Unit) {
     var textFieldValue by remember { mutableStateOf(TextFieldValue("")) }
     val size = animatedFloat(initVal = 12f)
     size.setBounds(12f, 64f)
-    ConstraintLayout(modifier = modifier.fillMaxWidth()) {
+    ConstraintLayout(
+        modifier = modifier.fillMaxWidth().background(MaterialTheme.colors.primarySurface)
+    ) {
         val edit = createRef()
         val button = createRef()
         BigTextField(

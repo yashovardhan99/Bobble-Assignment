@@ -7,27 +7,32 @@ import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.ConstraintLayout
 import androidx.compose.foundation.layout.Dimension
 import androidx.compose.foundation.layout.RowScope.gravity
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.tooling.preview.PreviewParameter
 import com.yashovardhan99.bobblebigtext.ui.BobbleBigTextTheme
-import timber.log.Timber
 
 @ExperimentalFoundationApi
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val viewModel = ViewModelProvider(this)[MessagesViewModel::class.java]
         setContent {
             BobbleBigTextTheme {
+                val messages by viewModel.messages.collectAsState(initial = listOf())
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
                     Scaffold(topBar = {
@@ -35,7 +40,9 @@ class MainActivity : AppCompatActivity() {
                             Text(text = "BigText")
                         })
                     }) {
-                        MainPage(list = getFakeMessages(), modifier = Modifier.padding(it))
+                        MainPage(list = messages, modifier = Modifier.padding(it)) { message ->
+                            viewModel.insertMessage(message)
+                        }
                     }
                 }
             }
@@ -45,8 +52,8 @@ class MainActivity : AppCompatActivity() {
 
 @ExperimentalFoundationApi
 @Composable
-fun MainPage(modifier: Modifier = Modifier, list: List<Message>) {
-    ConstraintLayout(modifier.gravity(Alignment.Bottom)) {
+fun MainPage(modifier: Modifier = Modifier, list: List<Message>, insertMessage: (Message) -> Unit) {
+    ConstraintLayout(modifier.fillMaxSize().gravity(Alignment.Bottom)) {
         val convList = createRef()
         val sendBar = createRef()
         ConversationList(list = list,
@@ -61,7 +68,7 @@ fun MainPage(modifier: Modifier = Modifier, list: List<Message>) {
             width = Dimension.fillToConstraints
             height = Dimension.preferredValue(50.dp)
         }) {
-            Timber.d("Message posted = $it")
+            insertMessage(it)
         }
     }
 }
@@ -77,7 +84,7 @@ fun MainPagePreview(@PreviewParameter(BooleanPreviewProvider::class) isDark: Boo
                     Text(text = "BigText")
                 })
             }) {
-                MainPage(list = getFakeMessages(), modifier = Modifier.padding(it))
+                MainPage(list = getFakeMessages(), modifier = Modifier.padding(it)) {}
             }
         }
     }
