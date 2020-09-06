@@ -40,7 +40,7 @@ fun Bubble(message: Message) {
 @Preview(showDecoration = true)
 @Composable
 fun BubblePreview(@PreviewParameter(BooleanPreviewProvider::class) isDark: Boolean) {
-    val message = Message(text = "Hello, How are you", size = 10f)
+    val message = Message(text = "Hello, How are you", size = 24f)
     BobbleBigTextTheme(isDark) {
         Surface(Modifier.fillMaxSize()) {
             Bubble(message = message)
