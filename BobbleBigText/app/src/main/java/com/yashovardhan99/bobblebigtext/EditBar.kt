@@ -132,7 +132,7 @@ fun SendBar(modifier: Modifier = Modifier, postMessage: (Message) -> Unit) {
 @Preview
 @Composable
 fun SendBarPreview() {
-    BobbleBigTextTheme {
+    BobbleBigTextTheme(true) {
         SendBar {}
     }
 }
