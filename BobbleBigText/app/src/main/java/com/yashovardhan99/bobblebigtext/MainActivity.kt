@@ -59,7 +59,8 @@ fun MainPage(modifier: Modifier = Modifier, list: List<Message>) {
             bottom.linkTo(parent.bottom)
             width = Dimension.fillToConstraints
             height = Dimension.preferredValue(50.dp)
-        })
+        }) {
+        }
     }
 }
 

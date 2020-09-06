@@ -1,6 +1,8 @@
 package com.yashovardhan99.bobblebigtext
 
 import androidx.compose.animation.animatedFloat
+import androidx.compose.animation.core.FloatTweenSpec
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.ColumnScope.gravity
@@ -21,8 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.ui.tooling.preview.Preview
 import com.yashovardhan99.bobblebigtext.ui.BobbleBigTextTheme
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @Composable
 fun SendButton(
@@ -59,12 +59,13 @@ fun SendButton(
 
 @ExperimentalFoundationApi
 @Composable
-fun BigTextField(size: TextUnit, modifier: Modifier = Modifier) {
+fun BigTextField(updateText: (String) -> Unit, size: TextUnit, modifier: Modifier = Modifier) {
     val scrollState = rememberScrollState()
     var value by remember { mutableStateOf(TextFieldValue("")) }
     BaseTextField(
         value = value, onValueChange = { updated ->
             value = updated
+            updateText(updated.text)
         }, textStyle = TextStyle(fontSize = size), modifier = modifier.verticalScroll(scrollState)
             .background(MaterialTheme.colors.surface, RectangleShape)
             .padding(4.dp)
@@ -73,33 +74,35 @@ fun BigTextField(size: TextUnit, modifier: Modifier = Modifier) {
 
 @ExperimentalFoundationApi
 @Composable
-fun SendBar(modifier: Modifier = Modifier) {
-    var text by remember { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
+fun SendBar(modifier: Modifier = Modifier, postMessage: (Message) -> Unit) {
     val size = animatedFloat(initVal = 12f)
-    size.setBounds(12f, 100f)
+    size.setBounds(12f, 64f)
     ConstraintLayout(modifier = modifier.fillMaxWidth()) {
         val edit = createRef()
         val button = createRef()
-        BigTextField(size = size.value.sp, modifier = Modifier.constrainAs(edit) {
+        var text by remember { mutableStateOf("") }
+        BigTextField(updateText = {
+            text = it
+        }, size = size.value.sp, modifier = Modifier.constrainAs(edit) {
             start.linkTo(parent.start)
             top.linkTo(parent.top)
+            bottom.linkTo(parent.bottom)
             end.linkTo(button.start)
             width = Dimension.fillToConstraints
-            height = Dimension.preferredWrapContent.atLeast(24.dp)
+            height = Dimension.preferredWrapContent.atLeast(50.dp)
         }.gravity(Alignment.Start))
         SendButton(onClick = {
+            postMessage(Message(text, size.value.sp))
+            text = ""
+            size.stop()
             size.animateTo(12f)
         }, onLongStart = {
-            text = true
-            scope.launch {
-                while (text) {
-                    size.animateTo(size.value + 1f)
-                    delay(100)
-                }
-            }
+            size.animateTo(size.max, FloatTweenSpec(duration = 2000, easing = LinearEasing))
         }, onLongEnd = {
-            text = false
+            postMessage(Message(text, size.value.sp))
+            text = ""
+            size.stop()
+            size.animateTo(12f)
         }, modifier = Modifier.constrainAs(button) {
             end.linkTo(parent.end)
             bottom.linkTo(parent.bottom)
@@ -112,6 +115,6 @@ fun SendBar(modifier: Modifier = Modifier) {
 @Composable
 fun SendBarPreview() {
     BobbleBigTextTheme() {
-        SendBar()
+        SendBar() {}
     }
 }
