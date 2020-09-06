@@ -1,0 +1,2 @@
+rootProject.name = "Bobble BigText"
+include ':app'
