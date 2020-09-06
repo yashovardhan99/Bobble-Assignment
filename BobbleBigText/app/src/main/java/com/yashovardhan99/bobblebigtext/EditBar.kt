@@ -59,13 +59,16 @@ fun SendButton(
 
 @ExperimentalFoundationApi
 @Composable
-fun BigTextField(updateText: (String) -> Unit, size: TextUnit, modifier: Modifier = Modifier) {
+fun BigTextField(
+    textFieldValue: TextFieldValue,
+    updateTextFieldValue: (TextFieldValue) -> Unit,
+    size: TextUnit,
+    modifier: Modifier = Modifier
+) {
     val scrollState = rememberScrollState()
-    var value by remember { mutableStateOf(TextFieldValue("")) }
     BaseTextField(
-        value = value, onValueChange = { updated ->
-            value = updated
-            updateText(updated.text)
+        value = textFieldValue, onValueChange = { updated ->
+            updateTextFieldValue(updated)
         }, textStyle = TextStyle(fontSize = size), modifier = modifier.verticalScroll(scrollState)
             .background(MaterialTheme.colors.surface, RectangleShape)
             .padding(4.dp)
@@ -75,32 +78,35 @@ fun BigTextField(updateText: (String) -> Unit, size: TextUnit, modifier: Modifie
 @ExperimentalFoundationApi
 @Composable
 fun SendBar(modifier: Modifier = Modifier, postMessage: (Message) -> Unit) {
+    var textFieldValue by remember { mutableStateOf(TextFieldValue("")) }
     val size = animatedFloat(initVal = 12f)
     size.setBounds(12f, 64f)
     ConstraintLayout(modifier = modifier.fillMaxWidth()) {
         val edit = createRef()
         val button = createRef()
-        var text by remember { mutableStateOf("") }
-        BigTextField(updateText = {
-            text = it
-        }, size = size.value.sp, modifier = Modifier.constrainAs(edit) {
-            start.linkTo(parent.start)
-            top.linkTo(parent.top)
-            bottom.linkTo(parent.bottom)
-            end.linkTo(button.start)
-            width = Dimension.fillToConstraints
-            height = Dimension.preferredWrapContent.atLeast(50.dp)
-        }.gravity(Alignment.Start))
+        BigTextField(
+            textFieldValue = textFieldValue,
+            updateTextFieldValue = { value -> textFieldValue = value },
+            size = size.value.sp,
+            modifier = Modifier.constrainAs(edit) {
+                start.linkTo(parent.start)
+                top.linkTo(parent.top)
+                bottom.linkTo(parent.bottom)
+                end.linkTo(button.start)
+                width = Dimension.fillToConstraints
+                height = Dimension.preferredWrapContent.atLeast(50.dp)
+            }.gravity(Alignment.Start)
+        )
         SendButton(onClick = {
-            postMessage(Message(text, size.value.sp))
-            text = ""
+            postMessage(Message(textFieldValue.text, size.value.sp))
+            textFieldValue = TextFieldValue("")
             size.stop()
             size.animateTo(12f)
         }, onLongStart = {
             size.animateTo(size.max, FloatTweenSpec(duration = 2000, easing = LinearEasing))
         }, onLongEnd = {
-            postMessage(Message(text, size.value.sp))
-            text = ""
+            postMessage(Message(textFieldValue.text, size.value.sp))
+            textFieldValue = TextFieldValue("")
             size.stop()
             size.animateTo(12f)
         }, modifier = Modifier.constrainAs(button) {
@@ -114,7 +120,7 @@ fun SendBar(modifier: Modifier = Modifier, postMessage: (Message) -> Unit) {
 @Preview
 @Composable
 fun SendBarPreview() {
-    BobbleBigTextTheme() {
-        SendBar() {}
+    BobbleBigTextTheme {
+        SendBar {}
     }
 }

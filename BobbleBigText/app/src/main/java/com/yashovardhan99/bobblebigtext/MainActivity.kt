@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.tooling.preview.PreviewParameter
 import com.yashovardhan99.bobblebigtext.ui.BobbleBigTextTheme
+import timber.log.Timber
 
 @ExperimentalFoundationApi
 class MainActivity : AppCompatActivity() {
@@ -60,6 +61,7 @@ fun MainPage(modifier: Modifier = Modifier, list: List<Message>) {
             width = Dimension.fillToConstraints
             height = Dimension.preferredValue(50.dp)
         }) {
+            Timber.d("Message posted = $it")
         }
     }
 }
